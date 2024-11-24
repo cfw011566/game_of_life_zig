@@ -26,6 +26,7 @@ pub fn main() !void {
     rl.setTargetFPS(FPS);
 
     // Main game loop
+    var iteration_count: usize = 0;
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Event Handling
 
@@ -46,5 +47,9 @@ pub fn main() !void {
         grid.draw();
 
         //----------------------------------------------------------------------------------
+        iteration_count += 1;
+        const title = try std.fmt.allocPrintZ(allocator, "Game of Life ({d})", .{iteration_count});
+        defer allocator.free(title);
+        rl.setWindowTitle(title);
     }
 }

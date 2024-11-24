@@ -61,15 +61,34 @@ pub fn draw(self: Self) void {
             const x: i32 = @intCast(row * self.cell_size);
             const size: i32 = @intCast(self.cell_size);
             var color = rl.Color.gray;
-            const value = self.cells[row][col];
-            if (value > 0 and value < 256) {
-                color = rl.Color.init(255, 0, 0, @intCast(value % 255));
-            } else if (value >= 256 and value < 512) {
-                color = rl.Color.init(0, 255, 0, @intCast(value % 255));
-            } else if (value >= 512 and value < 768) {
-                color = rl.Color.init(0, 0, 255, @intCast(value % 255));
-            } else if (value >= 768) {
+            var value = self.cells[row][col];
+            if (value == 1) {
                 color = rl.Color.white;
+            } else if (value > 0) {
+                value -= 1;
+                if (value < 128) {
+                    value %= 256;
+                    value += 127;
+                    color = rl.Color.init(255, 255, 255, @intCast(value));
+                    color = rl.Color.white;
+                } else if (value >= 128 and value <= 256) {
+                    value -= 128;
+                    value %= 256;
+                    value += 127;
+                    color = rl.Color.init(255, 0, 0, @intCast(value));
+                } else if (value >= 256 and value < 384) {
+                    value -= 256;
+                    value %= 256;
+                    value += 127;
+                    color = rl.Color.init(0, 255, 0, @intCast(value));
+                } else if (value >= 384 and value < 512) {
+                    value -= 384;
+                    value %= 256;
+                    value += 127;
+                    color = rl.Color.init(0, 0, 255, @intCast(value));
+                } else {
+                    color = rl.Color.black;
+                }
             }
             rl.drawRectangle(x, y, size - 1, size - 1, color);
         }
