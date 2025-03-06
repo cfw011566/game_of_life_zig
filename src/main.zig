@@ -8,8 +8,8 @@ const Grid = @import("grid.zig");
 pub fn main() !void {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const screen_width = 960;
-    const screen_height = 600;
+    const screen_width = 1200;
+    const screen_height = 800;
     const cell_size = 5;
     const FPS = 12;
     const color_background = rl.Color.init(29, 29, 29, 255);
