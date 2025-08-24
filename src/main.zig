@@ -53,7 +53,7 @@ pub fn main() !void {
 
         //----------------------------------------------------------------------------------
         iteration_count += 1;
-        const title = try std.fmt.allocPrintZ(title_allocator, "Game of Life ({d})", .{iteration_count});
+        const title = try std.fmt.allocPrintSentinel(title_allocator, "Game of Life ({d})", .{iteration_count}, 0);
         defer title_allocator.free(title);
         rl.setWindowTitle(title);
     }
