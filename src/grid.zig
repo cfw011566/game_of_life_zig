@@ -10,7 +10,6 @@ columns: u32,
 cell_size: u32,
 cells: [][]usize,
 next_cells: [][]usize,
-allocator: Allocator,
 
 const Self = @This();
 
@@ -28,7 +27,6 @@ pub fn init(allocator: Allocator, width: i32, height: i32, size: u32) !Self {
         next_cells[row] = try allocator.alloc(usize, columns);
     }
     return .{
-        .allocator = allocator,
         .rows = rows,
         .columns = columns,
         .cell_size = size,
@@ -37,13 +35,13 @@ pub fn init(allocator: Allocator, width: i32, height: i32, size: u32) !Self {
     };
 }
 
-pub fn deinit(self: Self) void {
+pub fn deinit(self: Self, allocator: Allocator) void {
     for (0..self.columns) |col| {
-        self.allocator.free(self.cells[col]);
-        self.allocator.free(self.next_cells[col]);
+        allocator.free(self.cells[col]);
+        allocator.free(self.next_cells[col]);
     }
-    self.allocator.free(self.cells);
-    self.allocator.free(self.next_cells);
+    allocator.free(self.cells);
+    allocator.free(self.next_cells);
 }
 
 pub fn fill_random(self: Self) void {
@@ -160,8 +158,6 @@ pub fn update(self: Self) void {
         }
     }
     for (0..self.rows) |row| {
-        for (0..self.columns) |col| {
-            self.cells[row][col] = self.next_cells[row][col];
-        }
+        @memcpy(self.cells[row], self.next_cells[row]);
     }
 }

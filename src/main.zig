@@ -22,7 +22,7 @@ pub fn main() !void {
     const title_allocator = fba.allocator();
 
     const grid = try Grid.init(allocator, screen_width, screen_height, cell_size);
-    defer grid.deinit();
+    defer grid.deinit(allocator);
     grid.fill_random();
 
     rl.initWindow(screen_width, screen_height, "Game of Life");
