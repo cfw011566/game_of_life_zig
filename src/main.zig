@@ -17,10 +17,6 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
 
-    var title_buffer: [100]u8 = undefined;
-    var fba = std.heap.FixedBufferAllocator.init(&title_buffer);
-    const title_allocator = fba.allocator();
-
     const grid = try Grid.init(allocator, screen_width, screen_height, cell_size);
     defer grid.deinit(allocator);
     grid.fill_random();
@@ -53,8 +49,6 @@ pub fn main() !void {
 
         //----------------------------------------------------------------------------------
         iteration_count += 1;
-        const title = try std.fmt.allocPrintSentinel(title_allocator, "Game of Life ({d})", .{iteration_count}, 0);
-        defer title_allocator.free(title);
-        rl.setWindowTitle(title);
+        rl.setWindowTitle(rl.textFormat("Game of Life (%i)", .{iteration_count}));
     }
 }
